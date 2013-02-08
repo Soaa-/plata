@@ -30,20 +30,42 @@ class TaxClass(models.Model):
     """
 
     name = models.CharField(_('name'), max_length=100)
-    rate = models.DecimalField(_('rate'), max_digits=10, decimal_places=2,
-        help_text=_('Tax rate in percent.'))
     priority = models.PositiveIntegerField(_('priority'), default=0,
         help_text=_('Used to order the tax classes in the'
             ' administration interface.'))
+    
+    @property
+    def rate(self):
+        total = 100
+        for rate in self.rates:
+            if rate.tax_on_tax:
+                total *= 1 + rate.rate / 100
+            else:
+                total += rate.rate
+        return total - 100
+
+    def __unicode__(self):
+        return self.name
 
     class Meta:
         ordering = ['-priority']
         verbose_name = _('tax class')
         verbose_name_plural = _('tax classes')
 
-    def __unicode__(self):
-        return self.name
 
+class TaxRate(models.Model):
+    tax_class = models.ForeignKey(TaxClass, verbose_name=_('tax class'),
+            related_name='rates')
+    name = models.CharField(_('name'), max_length=100,
+            help_text=_('tax name'))
+    rate = models.DecimalField(_('rate'), max_digits=10, decimal_places=4)
+    tax_on_tax = models.BooleanField(_('tax on previous tax'), default=False)
+    ordering = models.SmallIntegerField(_('ordering'), default=0)
+    
+    class Meta:
+        ordering = ['ordering',]
+        verbose_name = _('tax rate')
+        verbose_name_plural = _('tax rates')
 
 class BillingShippingAddress(models.Model):
     """
@@ -509,8 +531,10 @@ class OrderItem(models.Model):
 
     tax_rate = models.DecimalField(_('tax rate'),
         max_digits=10, decimal_places=2)
-    tax_class = models.ForeignKey(TaxClass, verbose_name=_('tax class'),
-        blank=True, null=True, on_delete=models.SET_NULL)
+    tax_class = models.ForeignKey(plata.settings.PLATA_TAX_MODEL,
+        verbose_name=_('tax class'),
+        blank=True, null=True,
+        on_delete=models.SET_NULL)
 
     is_sale = models.BooleanField(_('is sale'))
 
@@ -743,7 +767,7 @@ class PriceBase(models.Model):
     tax_included = models.BooleanField(_('tax included'),
         help_text=_('Is tax included in given unit price?'),
         default=plata.settings.PLATA_PRICE_INCLUDES_TAX)
-    tax_class = models.ForeignKey(TaxClass, verbose_name=_('tax class'),
+    tax_class = models.ForeignKey(plata.settings.PLATA_TAX_MODEL, verbose_name=_('tax class'),
                                   related_name='+')
 
     def __unicode__(self):

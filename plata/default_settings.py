@@ -72,3 +72,8 @@ CURRENCIES = getattr(settings, 'CURRENCIES', ('CHF', 'EUR', 'USD', 'CAD'))
 #: ``'product.Product'``)
 PLATA_SHOP_PRODUCT = getattr(settings, 'PLATA_SHOP_PRODUCT',
     'product.Product')
+
+#: Target of tax class foreign key (Defaults to
+#: ``'plata.shop.models.TaxClass'``)
+PLATA_TAX_MODEL = getattr(settings, 'PLATA_TAX_MODEL',
+    'plata.shop.models.TaxClass')

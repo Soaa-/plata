@@ -54,6 +54,12 @@ def product_model():
     from django.db.models import loading
     return loading.get_model(*settings.PLATA_SHOP_PRODUCT.split('.'))
 
+def tax_model():
+    """
+    Return the tax model defined by the ``PLATA_TAX_MODEL`` setting.
+    """
+    from django.db.models import loading
+    return loading.get_model(*settings.PLATA_TAX_MODEL.split('.'))
 
 def stock_model():
     """
