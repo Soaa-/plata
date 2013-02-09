@@ -36,16 +36,6 @@ class TaxClassBase(models.Model):
     priority = models.PositiveIntegerField(_('priority'), default=0,
         help_text=_('Used to order the tax classes in the'
             ' administration interface.'))
-    
-    @property
-    def rate(self):
-        total = 100
-        for rate in self.rates:
-            if rate.tax_on_tax:
-                total *= 1 + rate.rate / 100
-            else:
-                total += rate.rate
-        return total - 100
 
     def __unicode__(self):
         return self.name
