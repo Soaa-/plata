@@ -109,7 +109,7 @@ class TaxRateInlineBase(admin.TabularInline):
 
 class TaxClassAdminBase(admin.ModelAdmin):
     list_display = ('name', 'rate', 'priority',)
-    list_editable = ('rate', 'priority',)
+    list_editable = ('priority',)
 
 admin.site.register(models.Order, OrderAdmin)
 admin.site.register(models.OrderPayment, OrderPaymentAdmin)
