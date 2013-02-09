@@ -105,7 +105,7 @@ class OrderPaymentAdmin(admin.ModelAdmin):
     notes_short.short_description = _('notes')
 
 class TaxRateInlineBase(admin.TabularInline):
-    pass
+    extra = 0
 
 class TaxClassAdminBase(admin.ModelAdmin):
     list_display = ('name', 'rate', 'priority',)
