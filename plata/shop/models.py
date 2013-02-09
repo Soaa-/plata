@@ -22,7 +22,7 @@ from plata.fields import CurrencyField, JSONField
 logger = logging.getLogger('plata.shop.order')
 
 
-class TaxClass(models.Model):
+class TaxClassBase(models.Model):
     """
     Tax class, storing a tax rate
 
@@ -30,6 +30,9 @@ class TaxClass(models.Model):
     """
 
     name = models.CharField(_('name'), max_length=100)
+    tax_on_order = models.BooleanField(_('tax on order'), default=True,
+        help_text=_('Disable if tax is applied on each item as opposed'
+            ' to on the whole order.'))
     priority = models.PositiveIntegerField(_('priority'), default=0,
         help_text=_('Used to order the tax classes in the'
             ' administration interface.'))
@@ -48,14 +51,13 @@ class TaxClass(models.Model):
         return self.name
 
     class Meta:
+        abstract = True
         ordering = ['-priority']
         verbose_name = _('tax class')
         verbose_name_plural = _('tax classes')
 
 
-class TaxRate(models.Model):
-    tax_class = models.ForeignKey(TaxClass, verbose_name=_('tax class'),
-            related_name='rates')
+class TaxRateBase(models.Model):
     name = models.CharField(_('name'), max_length=100,
             help_text=_('tax name'))
     rate = models.DecimalField(_('rate'), max_digits=10, decimal_places=4)
@@ -63,6 +65,7 @@ class TaxRate(models.Model):
     ordering = models.SmallIntegerField(_('ordering'), default=0)
     
     class Meta:
+        abstract = True
         ordering = ['ordering',]
         verbose_name = _('tax rate')
         verbose_name_plural = _('tax rates')

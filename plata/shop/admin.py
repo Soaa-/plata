@@ -104,11 +104,10 @@ class OrderPaymentAdmin(admin.ModelAdmin):
         obj.notes[:40]+'...' if len(obj.notes) > 50 else obj.notes)
     notes_short.short_description = _('notes')
 
-class TaxRateInline(admin.TabularInline):
+class TaxRateInlineBase(admin.TabularInline):
     pass
 
-class TaxClassAdmin(admin.ModelAdmin):
-    inlines = (TaxRateInline,)
+class TaxClassAdminBase(admin.ModelAdmin):
     list_display = ('name', 'rate', 'priority',)
     list_editable = ('rate', 'priority',)
 

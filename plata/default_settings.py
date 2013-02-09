@@ -76,4 +76,4 @@ PLATA_SHOP_PRODUCT = getattr(settings, 'PLATA_SHOP_PRODUCT',
 #: Target of tax class foreign key (Defaults to
 #: ``'plata.shop.models.TaxClass'``)
 PLATA_TAX_MODEL = getattr(settings, 'PLATA_TAX_MODEL',
-    'plata.shop.models.TaxClass')
+    'tax.TaxClass')
