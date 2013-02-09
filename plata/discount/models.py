@@ -9,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 
 import plata
 from plata.fields import CurrencyField, JSONField
-from plata.shop.models import TaxClass, Order
+from plata.shop.models import Order
 
 
 class DiscountBase(models.Model):
@@ -50,7 +50,8 @@ class DiscountBase(models.Model):
 
     currency = CurrencyField(blank=True, null=True,
         help_text=_('Only required for amount discounts.'))
-    tax_class = models.ForeignKey(TaxClass, verbose_name=_('tax class'),
+    tax_class = models.ForeignKey(plata.settings.PLATA_TAX_MODEL,
+        verbose_name=_('tax class'),
         blank=True, null=True,
         help_text=_('Only required for amount discounts incl. tax.'))
 
